@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoccerH2O</title>
+    <style>
+        :root {
+            --blue-dark: #004c99;
+            --blue: #00aaff;
+            --blue-light: #e6f7ff;
+            --green: #00c853;
+            --text-dark: #123047;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--blue-light);
+            color: var(--text-dark);
+        }
+        header {
+            background: linear-gradient(135deg, #001f3f, #0066cc);
+            color: white;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+        }
+        .logo-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ffffff, #00aaff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        nav a {
+            color: white;
+            margin-left: 18px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .hero {
+            background: url('https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?auto=format&fit=crop&w=1600&q=80')
+                        center/cover no-repeat;
+            min-height: 380px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            color: white;
+            text-align: center;
+        }
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0,0,0,0.65), rgba(0,102,204,0.6));
+        }
+        .hero-content {
+            position: relative;
+            max-width: 700px;
+            padding: 20px;
+        }
+        .hero-title {
+            font-size: 2.6rem;
+            margin-bottom: 10px;
+        }
+        .hero-subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 22px;
+        }
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            border: none;
+            border-radius: 999px;
+            padding: 10px 22px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        .btn-primary {
+            background: var(--blue);
+            color: #fff;
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+        .section {
+            padding: 50px 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .section h2 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+        .section p.section-intro {
+            text-align: center;
+            max-width: 650px;
+            margin: 0 auto 30px;
+            font-size: 0.98rem;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            align-items: start;
+        }
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
+        .card h3 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+        .pill {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            background: rgba(0,170,255,0.1);
+            color: var(--blue-dark);
+            margin-bottom: 6px;
+        }
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 20px;
+        }
+        .player-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+        }
+        .player-name {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .player-position {
+            font-size: 0.85rem;
+            color: #567;
+            margin-bottom: 8px;
+        }
+        .hydration-bar {
+            background: #e0f4ff;
+            border-radius: 999px;
+            overflow: hidden;
+            height: 10px;
+            margin-top: 6px;
+        }
+        .hydration-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--blue), var(--green));
+        }
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            background: #fff;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+        }
+        .schedule-table th,
+        .schedule-table td {
+            padding: 10px 12px;
+            text-align: left;
+        }
+        .schedule-table thead {
+            background: var(--blue-dark);
+            color: #fff;
+        }
+        .schedule-table tbody tr:nth-child(even) {
+            background: #f5fbff;
+        }
+        .tips-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .tips-list li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            font-size: 0.95rem;
+        }
+        .tips-list li::before {
+            content: "💧";
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .contact-form {
+            display: grid;
+            gap: 12px;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+        .contact-form label {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid #c5d9ea;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        .contact-form textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+        footer {
+            background: var(--blue-dark);
+            color: #cfe7ff;
+            text-align: center;
+            padding: 18px;
+            font-size: 0.85rem;
+            margin-top: 40px;
+        }
+        footer span {
+            color: #fff;
+            font-weight: 600;
+        }
+        @media (max-width: 600px) {
+            .hero-title {
+                font-size: 2.1rem;
+            }
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            nav {
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            nav a {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <div class="logo-icon">H₂O</div>
+        <div>SoccerH2O</div>
+    </div>
+    <nav>
+        <a href="#about">About</a>
+        <a href="#programs">Programs</a>
+        <a href="#players">Players</a>
+        <a href="#schedule">Schedule</a>
+        <a href="#hydration">Hydration</a>
+        <a href="#contact">Contact</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">Flow With the Game.</h1>
+        <p class="hero-subtitle">
+            SoccerH2O blends elite soccer training with science-backed hydration so players move, think, and play at their peak.
+        </p>
+        <div class="hero-buttons">
+            <button class="btn btn-primary" onclick="document.getElementById('programs').scrollIntoView({behavior:'smooth'})">
+                View Training Programs
+            </button>
+            <button class="btn btn-secondary" onclick="document.getElementById('hydration').scrollIntoView({behavior:'smooth'})">
+                Hydration Guide
+            </button>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="about">
+    <h2>What is SoccerH2O?</h2>
+    <p class="section-intro">
+        SoccerH2O is a training hub focused on the two things players can control every day:
+        effort and hydration. We design sessions that keep the ball moving and the water flowing.
+    </p>
+    <div class="grid-2">
+        <div class="card">
+            <span class="pill">Our Mission</span>
+            <h3>Fluid Motion, Sharp Minds</h3>
+            <p>
+                We help players build stamina, speed, and decision-making by pairing high-intensity drills
+                with smart hydration habits. Every drill has a purpose, and every water break is intentional.
+            </p>
+        </div>
+        <div class="card">
+            <span class="pill">Who We Train</span>
+            <h3>From Rising Stars to Pros</h3>
+            <p>
+                Youth academies, high school teams, and semi-pro squads trust SoccerH2O to keep their
+                athletes performing deep into extra time—without fading.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="programs">
+    <h2>Training Programs</h2>
+    <p class="section-intro">
+        Every program includes built-in hydration checkpoints, so players learn to refuel before they hit the wall.
+    </p>
+    <div class="grid-2">
+        <div class="card">
+            <span class="pill">U12–U15</span>
+            <h3>Foundation Flow</h3>
+            <p>
+                Technical drills, small-sided games, and fun hydration challenges that teach young players
+                how to listen to their bodies and stay ready.
+            </p>
+            <ul class="tips-list">
+                <li>Ball mastery circuits</li>
+                <li>Short, frequent water breaks</li>
+                <li>Hydration “check-in” scoreboard</li>
+            </ul>
+        </div>
+        <div class="card">
+            <span class="pill">U16–Adult</span>
+            <h3>High-Intensity Wave</h3>
+            <p>
+                Position-specific conditioning, pressing drills, and match simulations with hydration
+                strategies tailored to role and workload.
+            </p>
+            <ul class="tips-list">
+                <li>GPS-based workload targets</li>
+                <li>Pre- and post-session hydration plans</li>
+                <li>Heat and humidity adjustments</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="players">
+    <h2>Featured Hydrated Players</h2>
+    <p class="section-intro">
+        These players don’t just train hard—they hydrate smart. Their numbers show it.
+    </p>
+    <div class="players-grid">
+        <div class="player-card">
+            <div class="player-name">River Cruz</div>
+            <div class="player-position">Forward · Pressing 9</div>
+            <div>Hydration Level: 98%</div>
+            <div class="hydration-bar">
+                <div class="hydration-fill" style="width:98%"></div>
+            </div>
+            <p style="font-size:0.85rem;margin-top:8px;">
+                Known for late-game sprints and clutch finishes—never fades in the 90th minute.
+            </p>
+        </div>
+        <div class="player-card">
+            <div class="player-name">Brooke Santos</div>
+            <div class="player-position">Midfielder · Box-to-Box</div>
+            <div>Hydration Level: 95%</div>
+            <div class="hydration-bar">
+                <div class="hydration-fill" style="width:95%"></div>
+            </div>
+            <p style="font-size:0.85rem;margin-top:8px;">
+                Covers every blade of grass and tracks hydration like a stat—because it is one.
+            </p>
+        </div>
+        <div class="player-card">
+            <div class="player-name">Lake Johnson</div>
+            <div class="player-position">Goalkeeper</div>
+            <div>Hydration Level: 99%</div>
+            <div class="hydration-bar">
+                <div class="hydration-fill" style="width:99%"></div>
+            </div>
+            <p style="font-size:0.85rem;margin-top:8px;">
+                Sharp reactions, loud communication, and zero cramp risk deep into extra time.
+            </p>
+        </div>
+        <div class="player-card">
+            <div class="player-name">Marina Lee</div>
+            <div class="player-position">Winger</div>
+            <div>Hydration Level: 96%</div>
+            <div class="hydration-bar">
+                <div class="hydration-fill" style="width:96%"></div>
+            </div>
+            <p style="font-size:0.85rem;margin-top:8px;">
+                Relentless 1v1 threat—stays explosive thanks to consistent pre-game fueling and fluids.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="schedule">
+    <h2>Upcoming Sessions</h2>
+    <p class="section-intro">
+        Join a SoccerH2O session and experience what it feels like to finish stronger than you started.
+    </p>
+    <table class="schedule-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Session</th>
+                <th>Level</th>
+                <th>Focus</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>April 5</td>
+                <td>Foundation Flow</td>
+                <td>U12–U15</td>
+                <td>First touch & hydration basics</td>
+            </tr>
+            <tr>
+                <td>April 12</td>
+                <td>High-Intensity Wave</td>
+                <td>U16–Adult</td>
+                <td>Pressing patterns & in-game fueling</td>
+            </tr>
+            <tr>
+                <td>April 19</td>
+                <td>Goalkeeper Deep Dive</td>
+                <td>All</td>
+                <td>Reaction drills & cramp prevention</td>
+            </tr>
+            <tr>
+                <td>April 26</td>
+                <td>Match Simulation Night</td>
+                <td>U14–Adult</td>
+                <td>Full 90 with hydration tracking</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<section class="section" id="hydration">
+    <h2>Hydration Playbook</h2>
+    <p class="section-intro">
+        Hydration isn’t just “drink more water.” It’s timing, quantity, and balance. Here are core principles
+        every SoccerH2O player learns.
+    </p>
+    <div class="grid-2">
+        <div class="card">
+            <span class="pill">Before Training</span>
+            <h3>Start the Session Full</h3>
+            <ul class="tips-list">
+                <li>Drink steadily in the 2 hours before training, not all at once.</li>
+                <li>Check your urine color—aim for pale yellow, not clear or dark.</li>
+                <li>Add a pinch of electrolytes if it’s hot or you sweat heavily.</li>
+            </ul>
+        </div>
+        <div class="card">
+            <span class="pill">During Training</span>
+            <h3>Small, Frequent Sips</h3>
+            <ul class="tips-list">
+                <li>Use every water break, even if you “don’t feel thirsty.”</li>
+                <li>Take small sips so your stomach stays comfortable while running.</li>
+                <li>In long sessions, mix water with an electrolyte drink.</li>
+            </ul>
+        </div>
+        <div class="card">
+            <span class="pill">After Training</span>
+            <h3>Refuel and Rebuild</h3>
+            <ul class="tips-list">
+                <li>Drink water within 30 minutes of finishing.</li>
+                <li>Pair fluids with a snack that has carbs and protein.</li>
+                <li>Keep sipping through the evening, especially after night sessions.</li>
+            </ul>
+        </div>
+        <div class="card">
+            <span class="pill">Bonus</span>
+            <h3>Hydration Tracker Idea</h3>
+            <p style="font-size:0.9rem;">
+                Give each player a bottle with level markers (25%, 50%, 75%, 100%) and set “checkpoints”
+                during training. Turn it into a team challenge: if everyone hits 75% by the final whistle,
+                the whole squad wins.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="contact">
+    <h2>Contact SoccerH2O</h2>
+    <p class="section-intro">
+        Want to bring SoccerH2O to your team, school, or club? Drop a message and we’ll get in touch.
+    </p>
+    <form class="contact-form">
+        <div>
+            <label for="name">Name</label>
+            <input id="name" type="text" placeholder="Your name">
+        </div>
+        <div>
+            <label for="team">Team / Club</label>
+            <input id="team" type="text" placeholder="Your team or organization">
+        </div>
+        <div>
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="you@example.com">
+        </div>
+        <div>
+            <label for="message">Message</label>
+            <textarea id="message" placeholder="Tell us about your players, level, and goals."></textarea>
+        </div>
+        <button type="button" class="btn btn-primary">Send Message</button>
+    </form>
+</section>
+
+<footer>
+    <div>© <span>SoccerH2O</span> — Stay Hydrated, Play Strong.</div>
+</footer>
+
+</body>
+</html>
